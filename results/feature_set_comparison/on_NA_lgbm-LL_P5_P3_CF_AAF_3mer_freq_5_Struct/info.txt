@@ -1,0 +1,8 @@
+TE_path: human_TE_cellline_all_NA_plain.csv
+symbol_to_fold_path: symbol_to_fold.tsv
+data_path: data_with_human_TE_cellline_all_NA_plain.csv
+model_name: lgbm
+bio_source: ['mean_te']
+features_to_extract: ['LL', 'P5', 'P3', 'CF', 'AAF', '3mer_freq_5', 'Struct']
+metrics: ['nan_r2', 'masked_mse_loss']
+results_path: results/NaN_test/on_NA_lgbm-LL_P5_P3_CF_AAF_3mer_freq_5_Struct

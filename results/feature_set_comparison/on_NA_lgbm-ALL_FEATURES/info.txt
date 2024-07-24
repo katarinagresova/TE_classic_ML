@@ -1,0 +1,8 @@
+TE_path: human_TE_cellline_all_NA_plain.csv
+symbol_to_fold_path: symbol_to_fold.tsv
+data_path: data_with_human_TE_cellline_all_NA_plain.csv
+model_name: lgbm
+bio_source: ['mean_te']
+features_to_extract: ['LL', 'P', 'P5', 'PC', 'P3', 'WP', 'K', 'CF', 'AAF', 'DC', '1mer_freq_5', '1mer_freq_C', '1mer_freq_3', '2mer_freq_5', '2mer_freq_C', '2mer_freq_3', '3mer_freq_5', '3mer_freq_C', '3mer_freq_3', '4mer_freq_5', '4mer_freq_C', '4mer_freq_3', '5mer_freq_5', '5mer_freq_C', '5mer_freq_3', '6mer_freq_5', '6mer_freq_C', '6mer_freq_3', 'Struct']
+metrics: ['nan_r2', 'masked_mse_loss']
+results_path: results/NaN_test/on_NA_lgbm-LL_P_P5_PC_P3_WP_K_CF_AAF_DC_1mer_freq_2mer_freq_3mer_freq_4mer_freq_5mer_freq_6mer_freq_Struct_1_2_3_4_5

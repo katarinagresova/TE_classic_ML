@@ -1,0 +1,6 @@
+appris_human_v2_selected.fa
+appris_mouse_v2_selected.fa
+human_all_biochem_feature_no_len.csv
+TE_classic_ML_env/*
+*.zip
+*.pyc

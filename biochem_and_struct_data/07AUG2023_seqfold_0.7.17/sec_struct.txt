@@ -1,0 +1,57 @@
+# Extract transcript regions
+awk '$4 ~ /UTR5/ {print $0}' appris_human_v2_actual_regions.bed > appris_human_v2_actual_regions_UTR5.bed
+
+awk '$4 ~ /UTR3/ {print $0}' appris_human_v2_actual_regions.bed > appris_human_v2_actual_regions_UTR3.bed
+
+awk '$4 ~ /CDS/ {print $0}' appris_human_v2_actual_regions.bed > appris_human_v2_actual_regions_CDS.bed
+
+# Generate BED for the terminus of the 5' UTR
+awk -v OFS="\t" '{print $1, $2, "60", $4, $5, $6}' appris_human_v2_actual_regions_UTR5.bed > appris_human_v2_actual_regions_UTR5_start.bed
+
+# Generate BED for the window spanning the TIS/Kozak
+# Have to use either -b or both -l and -r 
+bedtools slop -s -i appris_human_v2_actual_regions_CDS.bed -g appris_human_v2_transcript_lengths.tsv -l 30 -r 30 > appris_human_v2_actual_regions_CDS_kozak.bed
+
+# Correct the BED for transcripts with <60 nt 5' UTRs, as well as the end interval which was also slopped
+awk -v OFS="\t" '{$3=$2+60; print $1, $2, $3, $4, $5, $6}' appris_human_v2_actual_regions_CDS_kozak.bed > appris_human_v2_actual_regions_CDS_kozak_fixed.bed
+
+# Finally extract the sequences
+bedtools getfasta -fi appris_human_v2_selected.fa -bed appris_human_v2_actual_regions_UTR5_start.bed > appris_human_v2_actual_regions_UTR5_start.fa
+
+bedtools getfasta -fi appris_human_v2_selected.fa -bed appris_human_v2_actual_regions_CDS_kozak_fixed.bed > appris_human_v2_actual_regions_CDS_kozak_fixed.fa
+
+
+# Mouse
+awk '$4 ~ /UTR5/ {print $0}' appris_mouse_v2_filtered_regions.bed > appris_mouse_v2_filtered_regions_UTR5.bed
+
+awk '$4 ~ /UTR3/ {print $0}' appris_mouse_v2_filtered_regions.bed > appris_mouse_v2_filtered_regions_UTR3.bed
+
+awk '$4 ~ /CDS/ {print $0}' appris_mouse_v2_filtered_regions.bed > appris_mouse_v2_filtered_regions_CDS.bed
+
+# Generate BED for the terminus of the 5' UTR
+awk -v OFS="\t" '{print $1, $2, "60", $4, $5, $6}' appris_mouse_v2_filtered_regions_UTR5.bed > appris_mouse_v2_filtered_regions_UTR5_start.bed
+
+# Generate BED for the window spanning the TIS/Kozak
+# Have to use either -b or both -l and -r 
+bedtools slop -s -i appris_mouse_v2_filtered_regions_CDS.bed -g appris_mouse_v2_filtered_transcript_lengths.tsv -l 30 -r 30 > appris_mouse_v2_filtered_regions_CDS_kozak.bed
+
+# Correct the BED for transcripts with <120 nt 5' UTRs, as well as the end interval which was also slopped
+awk -v OFS="\t" '{$3=$2+60; print $1, $2, $3, $4, $5, $6}' appris_mouse_v2_filtered_regions_CDS_kozak.bed > appris_mouse_v2_filtered_regions_CDS_kozak_fixed.bed
+
+# Get the sequences
+bedtools getfasta -fi appris_mouse_v2_selected.fa -bed appris_mouse_v2_filtered_regions_UTR5_start.bed > appris_mouse_v2_filtered_regions_UTR5_start.fa
+
+bedtools getfasta -fi appris_mouse_v2_selected.fa -bed appris_mouse_v2_filtered_regions_CDS_kozak_fixed.bed > appris_mouse_v2_filtered_regions_CDS_kozak_fixed.fa
+
+
+# Used https://github.com/ijhoskins/bioinfo/blob/master/scripts/run_secondary_struct.py
+# This repo is quite outdated but still contain useful scripts
+
+python -m scripts.run_secondary_struct -f /scratch/users/ihoskins/te_model/appris_human_v2_actual_regions_UTR5_start.fa -o /scratch/users/ihoskins/te_model/sec_struc -t 37
+
+python -m scripts.run_secondary_struct -f /scratch/users/ihoskins/te_model/appris_human_v2_actual_regions_CDS_kozak_fixed.fa -o /scratch/users/ihoskins/te_model/sec_struc -t 37
+
+python -m scripts.run_secondary_struct -f /scratch/users/ihoskins/te_model/appris_mouse_v2_filtered_regions_UTR5_start.fa -o /scratch/users/ihoskins/te_model/sec_struc -t 37
+
+python -m scripts.run_secondary_struct -f /scratch/users/ihoskins/te_model/appris_mouse_v2_filtered_regions_CDS_kozak_fixed.fa -o /scratch/users/ihoskins/te_model/sec_struc -t 37
+
