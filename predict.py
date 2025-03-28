@@ -8,6 +8,8 @@ from train import nan_r2
 import numpy as np
 import argparse
 
+import time
+
 class LGBM_TE_model:
     def __init__(self, models_dir: str):
         print(f'Loading models from {models_dir}')
@@ -30,8 +32,9 @@ class LGBM_TE_model:
     def predict_TE(self, data: pd.DataFrame) -> pd.DataFrame:
         # if "Struct" in self.features_to_extract:
         #     data = calc_struct_data(data)
-
+        number_of_cell_lines = 0
         for bio_source, models in tqdm(self.models.items()):
+            number_of_cell_lines += 1
             extracted_features, _ = dataframe_feature_extract(data, self.features_to_extract, te_source='tx_size')
             if "transcript_id" in extracted_features.columns:
                 extracted_features = extracted_features.drop(columns=['transcript_id'])
@@ -69,7 +72,7 @@ class LGBM_TE_model:
         data["mean_across_cell_lines_pred"] = data[[f"{bio_source}_pred" for bio_source in bio_sources]].mean(axis=1)
 
         data = data[cols]
-        return data
+        return data, number_of_cell_lines
     
     def predict_TE_single_fold(self, data: pd.DataFrame, fold: int) -> pd.DataFrame:
         # if "Struct" in self.features_to_extract:
@@ -114,10 +117,18 @@ if __name__ == '__main__':
     argparser.add_argument('--data_path', type=str, required=True, help='Path to the data to predict on, ex: ./examples/predict_input_example.csv')
     argparser.add_argument('--output_path', type=str, required=True, help='Path to save the output, ex: ./examples/predict_output_example.csv')
     args = argparser.parse_args()
-   
+    
+    start_time = time.time()
     model = LGBM_TE_model(args.model_dir)
     data = pd.read_csv(args.data_path, sep='\t')
-    data = model.predict_TE(data)
+    data, number_of_cell_lines = model.predict_TE(data)
     data.to_csv(args.output_path, sep='\t', index=False)
+    end_time = time.time()
+    total_time = end_time - start_time
+    print("Number of cell lines predicted: ", number_of_cell_lines)
+    print("Number of genes predicted: ", len(data))
+    print("Total time taken (sec): ", total_time)
+    print("Average time taken per cell line (sec): ", total_time/number_of_cell_lines)
+
 
 
