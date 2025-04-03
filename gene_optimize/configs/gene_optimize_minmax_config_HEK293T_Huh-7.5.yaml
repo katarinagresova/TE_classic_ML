@@ -1,0 +1,20 @@
+cell_line_1: 'HEK293T'
+cell_line_2: 'Huh-7.5'
+
+cell_line_1_model_path: './results/For_Gene_Optimize/bio_source_HEK293T/on_NA_lgbm-LL_P5_P3_CF_AAF_3mer_freq_5'
+cell_line_2_model_path: './results/For_Gene_Optimize/bio_source_Huh-7.5/on_NA_lgbm-LL_P5_P3_CF_AAF_3mer_freq_5'
+
+true_data_path: './data/data_with_human_TE_cellline_all_NA_plain.csv'
+gene_path: './gene_optimize/data/eGFP.csv'
+results_path: './gene_optimize/results/HEK293T_Huh-7.5/'
+
+max_tx_size: 2_000
+only_better_performing: True
+only_increase_target_cell_line: False
+
+discrete_gradient_descent: True
+dgd_max_iter: 50
+dgd_seed: 0
+dgd_num_inits: 10
+init_from_simple_codon_op: True
+dgd_only_increase: False

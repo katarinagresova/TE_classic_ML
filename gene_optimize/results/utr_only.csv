@@ -1,0 +1,13 @@
+cell_lines(max_min),percentile_in_max-ing_cell_line,percentile_in_min-ing_cell_line
+HEK293T_MCF7,0.814,0.502
+MCF7_HEK293T,0.85,0.122
+HEK293T_Huh-7.5,0.945,0.325
+Huh-7.5_HEK293T,0.566,0.54
+HEK293T_A549,0.85,0.415
+A549_HEK293T,0.722,0.173
+A549_Huh-7.5,0.822,0.154
+Huh-7.5_A549,0.517,0.048
+A549_MCF7,0.84,0.57
+MCF7_A549,0.966,0.691
+Huh-7.5_MCF7,0.895,0.66
+MCF7_Huh-7.5,0.936,0.105
