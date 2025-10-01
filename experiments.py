@@ -1,7 +1,6 @@
 import argparse
 import os
 from train import run_experiment, RANDOM_SEED, get_model_dir_name, nan_r2, masked_mse_loss, create_symbol_to_fold
-import torch
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
@@ -213,7 +212,6 @@ def vst_coposittional_test(args):
 
 
 if __name__ == '__main__':
-    torch.manual_seed(RANDOM_SEED)
     np.random.seed(RANDOM_SEED)
 
     tqdm.pandas()

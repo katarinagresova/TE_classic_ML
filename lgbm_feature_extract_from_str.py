@@ -2,7 +2,6 @@ from collections import OrderedDict
 import pandas as pd
 import numpy as np
 from data import BIOCHEM_FILE
-from seqfold import dg
 
 
 CODON_TO_AMINO_ACID = {

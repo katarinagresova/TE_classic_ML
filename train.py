@@ -5,8 +5,6 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LassoCV, ElasticNetCV
 from sklearn.ensemble import RandomForestRegressor
 import lightgbm as lgbm
-import torch
-from torchmetrics.functional import pearson_corrcoef, r2_score, spearman_corrcoef, mean_squared_error
 import time
 from lgbm_feature_extract_from_str import dataframe_feature_extract
 from data import get_data
@@ -63,10 +61,9 @@ def nan_pearson_corr(predictions: np.ndarray, targets: np.ndarray, axis: int = 0
     )
 # From Dinghai's code
 def masked_mse_loss(input, target, masked_value="NA", reduction="mean"):
-    input = torch.from_numpy(input)
-    target = torch.from_numpy(target)
     if masked_value == "NA":
-        mask = target.isnan()
+        # target is numpy.ndarray. get mask where target is nan
+        mask = np.isnan(target)
     else:
         mask = target == masked_value
     out = (input[~mask] - target[~mask]) ** 2
@@ -77,16 +74,9 @@ def masked_mse_loss(input, target, masked_value="NA", reduction="mean"):
 
 def evaluate(y_preds: np.ndarray, y_true: np.ndarray, metrics):
     y_true = y_true.squeeze()
-    # y_preds = torch.from_numpy(y_preds).squeeze()
-    # y_true = torch.from_numpy(y_true).squeeze()
-    # replace all Nan with 0
-    # y_preds_tensor = torch.where(torch.isnan(y_preds_tensor), torch.zeros_like(y_preds_tensor), y_preds_tensor)
-    # y_true_tensor = torch.where(torch.isnan(y_true_tensor), torch.zeros_like(y_true_tensor), y_true_tensor)
     results = {}
     for metric in metrics:
         x = metric(y_preds, y_true)
-        if isinstance(x, torch.Tensor):
-            x = x.item()
         results[metric.__name__] = x
     return results
 
@@ -349,7 +339,6 @@ def create_symbol_to_fold(te_path, symbol_to_fold_path):
 
 if __name__ == '__main__':
     # seed everything
-    torch.manual_seed(RANDOM_SEED)
     np.random.seed(RANDOM_SEED)
 
     tqdm.pandas()
